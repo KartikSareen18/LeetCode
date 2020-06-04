@@ -28,36 +28,45 @@
 class Solution {
     public int twoCitySchedCost(int[][] costs) {
 
-        int countA=0,countB=0;
         int sum=0;
         int n=costs.length/2;
-        //sort on the basis of difference of cost 
-        Arrays.sort(costs,(a,b)-> Math.abs(b[1]-b[0])-Math.abs(a[1]-a[0]));
+        Arrays.sort(costs,(a,b)-> (b[1]-b[0])-(a[1]-a[0]));
         for(int i=0;i<costs.length;i++){
-            if(costs[i][0]<costs[i][1])
-            {
-                if(countA<n){
-                    sum+=costs[i][0];
-                    countA++;
-                }
-                else{
-                    sum+=costs[i][1];
-                    countB++;
-                }
-                
-            }
-            else{
-                if(countB<n){
-                    sum+=costs[i][1];
-                    countB++;
-                }
-                else{
-                    sum+=costs[i][0];
-                    countA++;
-                }
-            }
+            sum+=i>=costs.length/2 ? costs[i][1]:costs[i][0];
         }
         return sum;
+
+
+        // int countA=0,countB=0;
+        // int sum=0;
+        // int n=costs.length/2;
+        // //sort on the basis of difference of cost 
+        // Arrays.sort(costs,(a,b)-> Math.abs(b[1]-b[0])-Math.abs(a[1]-a[0]));
+        // for(int i=0;i<costs.length;i++){
+        //     if(costs[i][0]<costs[i][1])
+        //     {
+        //         if(countA<n){
+        //             sum+=costs[i][0];
+        //             countA++;
+        //         }
+        //         else{
+        //             sum+=costs[i][1];
+        //             countB++;
+        //         }
+                
+        //     }
+        //     else{
+        //         if(countB<n){
+        //             sum+=costs[i][1];
+        //             countB++;
+        //         }
+        //         else{
+        //             sum+=costs[i][0];
+        //             countA++;
+        //         }
+        //     }
+        // }
+        // return sum;
         
         
         // int sum=0;
