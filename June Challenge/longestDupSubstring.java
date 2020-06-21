@@ -21,7 +21,6 @@
 // 2 <= S.length <= 10^5
 // S consists of lowercase English letters.
 
-
 // using suffix array
 // class Solution {
 //     public String longestDupSubstring(String S) {
@@ -59,11 +58,15 @@
 
 // using Rabin-Karp 's algorithm
 class Solution {
- 
+    private List<Long>power;
     public String longestDupSubstring(String S) {
         int n=S.length();
         String res="";
-        int l=0,r=n-1;
+        power= new ArrayList<>();
+        power.add(1l);
+        for(int i=1;i<n;i++)
+            power.add(power.get(i-1)*26);
+        int l=1,r=n-1;
         while(l<=r){
             int mid=l+(r-l)/2;
             String curr=rabinKarp(S,mid);
@@ -79,30 +82,27 @@ class Solution {
     
     private String rabinKarp(String s, int len) {
         Map<Long, List<Integer>> map = new HashMap<>();
+        
         long curr=0;
         for(int i=0;i<len;i++)
-            curr=curr*26 +s.charAt(i);
-            
-        map.put(curr, new ArrayList());
+            curr=(curr*26)+(s.charAt(i)-'a');   
+
+        map.put(curr,new ArrayList<>());
         map.get(curr).add(0);
-
-        long RM = 1;
-        for (int i = 1; i <= len - 1; i++)
-            RM = (26 * RM);
-
-        for (int i = len; i < s.length(); i++) {
-            
-            curr = (curr - RM * s.charAt(i - len));
-            curr = (curr * 26 + s.charAt(i));
-            if (map.containsKey(curr)) {
-                for(int index: map.get(curr)) 
-                    if(s.substring(index, index + len).equals(s.substring(i - len + 1, i + 1)))
-                        return s.substring(i - len + 1, i + 1);
-            } 
-            map.putIfAbsent(curr, new ArrayList());
-            map.get(curr).add(i - len + 1);
+        
+        for(int i=len;i<s.length();i++){
+            curr-=(power.get(len-1)*(s.charAt(i-len)-'a'));
+            curr*=26;
+            curr+=(s.charAt(i)-'a');
+            if(map.containsKey(curr)){
+                for(int index: map.get(curr)){
+                    if(s.substring(index,index+len).equals(s.substring(i-len+1,i+1)))
+                        return s.substring(i-len+1,i+1);
+                }
+            }
+            map.putIfAbsent(curr,new ArrayList<>());
+            map.get(curr).add(i-len+1);
         }
-
         return "";
     }
 
